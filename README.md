@@ -1,4 +1,4 @@
-# OMOP Anonymization with Synthetic Data
+#  Synthetic-Data-Replica-for-Healthcare
 
 ## Description
 
