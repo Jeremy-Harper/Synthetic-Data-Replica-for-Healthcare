@@ -344,7 +344,6 @@ We've created and inspected our synthetic datasets using three modules within it
 > 2. **DataGenerator**: samples from the summary computed by DataDescriber and outputs synthetic data
 > 3. **ModelInspector**: creates plots comparing what was computed by DataDescriber, allowing you to evaluate the accuracy of the summarization process
 
-([original repo](https://github.com/DataResponsibly/DataSynthesizer)).
 ---
 
 ### References I thought might be helpful for you
@@ -352,3 +351,7 @@ We've created and inspected our synthetic datasets using three modules within it
 - [Exploring methods for synthetic A&E data](https://odileeds.org/blog/2019-01-24-exploring-methods-for-creating-synthetic-a-e-data) - Jonathan Pearson, NHS England with Open Data Institute Leeds.
 - [DataSynthesizer: Privacy-Preserving Synthetic Datasets](https://faculty.washington.edu/billhowe/publications/pdfs/ping17datasynthesizer.pdf) Haoyue Ping, Julia Stoyanovich, and Bill Howe. 2017
 
+Notes on things to do - 
+1. Upgrade data synthesizer to latest version
+2. Enhance automatically identifying columns and bucketing them
+3. Enhance the de-identification process and description, make a list for different datatypes
