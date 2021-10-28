@@ -20,7 +20,17 @@ Jeremy Harper Biomedical Informatician Extraordinaire. Experienced executive, da
 
 **Why did you make this?**
 
-I thought A TUTORIAL was in order because this is a tranformational technology. Go to your IRB and have them determine that a synthetic data replica is non-human subjects. Then you can run reports as quickly as you can out of a production healthcare instance as the honest broker then use the module and make the data available with synthetic data. I love the idea of helping bring it to healthcare facilities and seeing them training to run this locally. It protects patient privacy and when used properly can expidite useful research and help elimate paths that might have seen 6 months investment before being able to have data in hand to analyze. 
+I thought A TUTORIAL was in order because this is a tranformational technology that has seen low adoption rates in healthcare and healthcare research. I adapted all of this so its building on the shoulders of others.
+
+**How can I adopt this technology at my research organization?**
+
+Step 1. Go to your IRB and have them determine that a synthetic data replica is non-human subjects. Have them identify/bless an honest data broker while you are there. As this protects patient privacy and when used properly can expidite useful research and help elimate paths that might have seen 6 months investment before being able to have data in hand to analyze its typically an easy sell after educating the IRB office. 
+
+Step 2. Create reports out of a production healthcare instance as the honest broker.
+
+Step 3. Use these modules and make the data available with synthetic data. 
+
+Step 4. I love the idea of helping bring it to healthcare facilities and seeing them training to run this locally. Shoot me a note to tell me you've done it so I can grin. 
 
 ## Overview
 
