@@ -46,7 +46,7 @@ class DataDescriber:
         Input dataset encoded into integers, taken as input by PrivBayes algorithm in correlated attribute mode.
     """
 
-    def __init__(self, histogram_bins: Union[int, str] = 20, category_threshold=10, null_values=None):
+    def __init__(self, histogram_bins: Union[int, str] = 20, category_threshold=20, null_values=None):
         self.histogram_bins: Union[int, str] = histogram_bins
         self.category_threshold: int = category_threshold
         self.null_values = null_values
@@ -172,12 +172,12 @@ class DataDescriber:
                                                             seed)
         self.df_encoded = self.encode_dataset_into_binning_indices()
         if self.df_encoded.shape[1] < 2:
-            raise Exception("Correlated Attribute Mode requires at least 2 attributes/columns in dataset.")
+            raise Exception("Correlated Attribute Mode requires at least 2 attributes(i.e., columns) in dataset.")
 
-        self.bayesian_network = greedy_bayes(self.df_encoded, k, epsilon)
+        self.bayesian_network = greedy_bayes(self.df_encoded, k, epsilon / 2)
         self.data_description['bayesian_network'] = self.bayesian_network
         self.data_description['conditional_probabilities'] = construct_noisy_conditional_distributions(
-            self.bayesian_network, self.df_encoded, epsilon)
+            self.bayesian_network, self.df_encoded, epsilon / 2)
 
     def read_dataset_from_csv(self, file_name=None):
         try:
@@ -225,7 +225,10 @@ class DataDescriber:
 
         # find all candidate keys.
         for attr in all_attributes - set(self.attr_to_is_candidate_key):
-            self.attr_to_is_candidate_key[attr] = self.df_input[attr].is_unique
+            if self.attr_to_datatype[attr] in {DataType.FLOAT, DataType.DATETIME}:
+                self.attr_to_is_candidate_key[attr] = False
+            else:
+                self.attr_to_is_candidate_key[attr] = self.df_input[attr].is_unique
 
         candidate_keys = {attr for attr, is_key in self.attr_to_is_candidate_key.items() if is_key}
 
@@ -238,7 +241,8 @@ class DataDescriber:
             if not is_categorical and self.attr_to_datatype[attr] is DataType.STRING:
                 non_categorical_string_attributes.add(attr)
 
-        attributes_in_BN = list(all_attributes - candidate_keys - non_categorical_string_attributes)
+        attributes_in_BN = [attr for attr in self.df_input if
+                            attr not in candidate_keys and attr not in non_categorical_string_attributes]
         non_categorical_string_attributes = list(non_categorical_string_attributes)
 
         self.data_description['meta'] = {"num_tuples": self.df_input.shape[0],
@@ -300,48 +304,3 @@ class DataDescriber:
 
     def display_dataset_description(self):
         print(json.dumps(self.data_description, indent=4))
-
-
-if __name__ == '__main__':
-    from DataGenerator import DataGenerator
-
-    # input dataset
-    input_data = './data/adult_ssn.csv'
-    # location of two output files
-    mode = 'correlated_attribute_mode'
-    description_file = './out/{}/description.txt'.format(mode)
-    synthetic_data = './out/{}/sythetic_data.csv'.format(mode)
-
-    # An attribute is categorical if its domain size is less than this threshold.
-    # Here modify the threshold to adapt to the domain size of "education" (which is 14 in input dataset).
-    threshold_value = 20
-
-    # Additional strings to recognize as NA/NaN.
-    na_values = '<NULL>'
-
-    # specify which attributes are candidate keys of input dataset.
-    candidate_keys = {'age': False, 'ssn': True}
-
-    # A parameter in differential privacy.
-    # It roughly means that removing one tuple will change the probability of any output by  at most exp(eps).
-    # Set eps=0 to turn off differential privacy.
-    eps = 0.1
-
-    # The maximum number of parents in Bayesian network, i.e., the maximum number of incoming edges.
-    degree_of_bayesian_network = 2
-
-    # Number of tuples generated in synthetic dataset.
-    num_tuples_to_generate = 32561  # Here 32561 is the same as input dataset, but it can be set to another number.
-
-    describer = DataDescriber(histogram_bins='fd',
-                              category_threshold=threshold_value,
-                              null_values=na_values)
-    describer.describe_dataset_in_correlated_attribute_mode(input_data,
-                                                            epsilon=eps,
-                                                            attribute_to_is_candidate_key=candidate_keys)
-    describer.save_dataset_description_to_file(description_file)
-
-    generator = DataGenerator()
-    generator.generate_dataset_in_correlated_attribute_mode(num_tuples_to_generate, description_file)
-    generator.save_synthetic_data(synthetic_data)
-    print(generator.synthetic_dataset.head())

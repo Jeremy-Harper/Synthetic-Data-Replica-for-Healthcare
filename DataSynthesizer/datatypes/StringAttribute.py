@@ -17,7 +17,8 @@ class StringAttribute(AbstractAttribute):
         super().__init__(name, is_candidate_key, is_categorical, histogram_size, data)
         self.is_numerical = False
         self.data_type = DataType.STRING
-        self.data_dropna_len = self.data_dropna.astype(str).map(len)
+        self.data_dropna = self.data_dropna.astype(str)
+        self.data_dropna_len = self.data_dropna.map(len)
 
     def infer_domain(self, categorical_domain=None, numerical_range=None):
         if categorical_domain:
@@ -45,13 +46,11 @@ class StringAttribute(AbstractAttribute):
             self.distribution_bins = np.array(distribution.index)
         else:
             distribution = np.histogram(self.data_dropna_len, bins=self.histogram_size)
+            self.distribution_bins = distribution[1][:-1]
             self.distribution_probabilities = utils.normalize_given_distribution(distribution[0])
-            bins = distribution[1][:-1]
-            bins[0] = bins[0] - 0.001 * (bins[1] - bins[0])
-            self.distribution_bins = bins
 
     def generate_values_as_candidate_key(self, n):
-        length = np.random.randint(self.min, self.max)
+        length = np.random.randint(self.min, self.max + 1)
         vectorized = np.vectorize(lambda x: '{}{}'.format(utils.generate_random_string(length), x))
         return vectorized(np.arange(n))
 

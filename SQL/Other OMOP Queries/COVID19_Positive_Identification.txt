@@ -1,0 +1,16 @@
+--Purpose - pull together all covid19 positive patients into a single table
+--Creator/Owner/contact - Jeremy Harper jeremytech@gmail.com
+--Last Update - 10/30/2020
+--Description - This gets all people with a measurement or a problem list indicating C19. The main n3c site reports 170,125 ppl in the cohort, this grabbed 169350 unique people. 
+select measurement.person_id, measurement.measurement_date as start_date, measurement.value_as_concept_name as description, measurement.visit_occurrence_id as C19_identification_visit_id, "concept_651620200" as source --measurement.data_partner_id
+from measurement 
+--At the time of writing, measurement_source_concept_id got 64706, measurement concept id got 109526, both got 101093 it looks like measurement concept id is the best choice. 
+left join concept_set_members on measurement.measurement_concept_id=concept_set_members.concept_id
+--The concept grabs all current potential concept_id's. The Value indicates it is positive result
+where concept_set_members.codeset_id in ('651620200') and (measurement.value_as_concept_id in ('4126681', '45877985', '45884084', '9191'))
+union all
+--This grabs everyone with a problem list item
+select person_id, MIN(condition_start_datetime) as start_date, first(condition_concept_name) as description, first(visit_occurrence_id) as C19_identification_visit_id, "condition_37311061" as source
+from condition_occurrence
+where condition_occurrence.condition_concept_id=37311061
+group by person_id

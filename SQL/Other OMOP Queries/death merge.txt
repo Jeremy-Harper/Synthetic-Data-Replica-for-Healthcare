@@ -1,0 +1,9 @@
+--Purpose - identify who has had covid19 and has died. this returns a distinct count.
+--Creator/Owner/contact - Jeremy Harper jeremytech@gmail.com
+--Last Update - 11/10/2020
+--Description - this is very simple
+SELECT *
+FROM death
+left outer join C19_positive_persons on death.person_id=C19_positive_persons.person_id
+--Death type concept ID 32510 is EHR record patient status "Deceased". It appears the best option to presume that someone died in the hospital. Note that workflows do not guarantee this is the case, I can log into the EHR while on the phone with a family member and mark them as deceased and it will appear the same way.
+where C19_positive_persons.person_id is not null and death.death_type_concept_id=32510

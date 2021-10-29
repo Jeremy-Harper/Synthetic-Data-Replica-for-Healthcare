@@ -1,0 +1,10 @@
+--Purpose - Add Hospitalization Information
+--Creator/Owner/contact - Jeremy Harper jeremytech@gmail.com
+--Last Update - 10/30/2020
+--Description - This takes a list of people with a specific event date (COVID19) and looks for hospitalization in the 15 days pre/post the date. Note that you might want to restructure this to look at the specific encounter that is listed from the original generated on C19 patients, here we only look at whether the encounter for what we define as inpatient has happened between plus/minus 15 days. Currently 86% result in null
+SELECT COVID19_Positive_Identification.person_id, COVID19_Positive_Identification.start_date, COVID19_Positive_Identification.description, COVID19_Positive_Identification.C19_identification_visit_id, COVID19_Positive_Identification.source,visit_occurrence.visit_occurrence_id as Hospitalization_visit_id, if(visit_occurrence.visit_occurrence_id is not Null, "Hospitalized", "Not_Hospitalized") as hospitalization
+FROM COVID19_Positive_Identification
+left outer join visit_occurrence on COVID19_Positive_Identification.person_id=visit_occurrence.person_id and (visit_occurrence.visit_concept_name like "Inpatient Critical Care Facility" OR visit_occurrence.visit_concept_name like "Inpatient Visit" OR visit_occurrence.visit_concept_name like "Inpatient Hospital" OR visit_occurrence.visit_concept_name like "Emergency Room and Inpatient Visit" OR visit_occurrence.visit_concept_name like "Inpatient Critical Care Facility") 
+--immediately above I opted to use visit_concept_name, long term you might want to migrate to equivalent codes instead
+-- immediately below is the +-15 day constraint. Tune as you see fit
+and DATEDIFF (COVID19_Positive_Identification.start_date, visit_occurrence.visit_start_date) between -15 and 15

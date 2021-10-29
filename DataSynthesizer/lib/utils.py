@@ -23,7 +23,7 @@ def mutual_information(labels_x: Series, labels_y: DataFrame):
     if labels_y.shape[1] == 1:
         labels_y = labels_y.iloc[:, 0]
     else:
-        labels_y = labels_y.apply(lambda x: ' '.join(x.get_values()), axis=1)
+        labels_y = labels_y.apply(lambda x: ' '.join(x.values), axis=1)
 
     return mutual_info_score(labels_x, labels_y)
 
@@ -45,7 +45,10 @@ def normalize_given_distribution(frequencies):
     distribution = distribution.clip(0)  # replace negative values with 0
     summation = distribution.sum()
     if summation > 0:
-        return distribution / distribution.sum()
+        if np.isinf(summation):
+            return normalize_given_distribution(np.isinf(distribution))
+        else:
+            return distribution / summation
     else:
         return np.full_like(distribution, 1 / distribution.size)
 

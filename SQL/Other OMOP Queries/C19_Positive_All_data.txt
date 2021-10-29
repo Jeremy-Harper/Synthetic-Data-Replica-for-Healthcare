@@ -1,0 +1,15 @@
+--Purpose - Calculate age and decade grouping
+--Creator/Owner/contact - Jeremy Harper jeremytech@gmail.com
+--Last Update - 10/30/2020
+--Description - This takes everyone can creates an age column at time of C19 and a age_group column. Note I chose to use an assumption of everyone being born 1/1/year. This is wrong, you could also list out years but that seems to create problems in 2021 etc. 
+select C19_Positive_Hospitalization.person_id, C19_Positive_Hospitalization.start_date, C19_Positive_Hospitalization.description, C19_Positive_Hospitalization.C19_identification_visit_id, C19_Positive_Hospitalization.Hospitalization_visit_id, C19_Positive_Hospitalization.hospitalization, C19_Positive_Hospitalization.source, round(Age_At_C19_temp, 2) as Age_At_C19, if(round(Age_At_C19_temp, 1) between 0 and 9.9,"0-9",if(round(Age_At_C19_temp, 1) between 10 and 19.9,"10-19",if(round(Age_At_C19_temp, 1) between 20 and 29.9,"20-29",if(round(Age_At_C19_temp, 1) between 30 and 39.9,"30-39",if(round(Age_At_C19_temp, 1) between 40 and 49.9,"40-49",if(round(Age_At_C19_temp, 1) between 50 and 59.9,"50-59",if(round(Age_At_C19_temp, 1) between 60 and 69.9,"60-69",if(round(Age_At_C19_temp, 1) between 70 and 79.9,"70-79",if(round(Age_At_C19_temp, 1) between 80 and 89.9,"80-89",if(round(Age_At_C19_temp, 1) between 90 and 99.9,"90-99",if(round(Age_At_C19_temp, 1) between 100 and 109.9,"100-109",if(round(Age_At_C19_temp, 1) between 110 and 119.9,"110-119","ERROR")))))))))))) as age_group
+from (
+    select C19_Positive_Hospitalization.person_id, C19_Positive_Hospitalization.start_date, C19_Positive_Hospitalization.description, C19_Positive_Hospitalization.C19_identification_visit_id, C19_Positive_Hospitalization.Hospitalization_visit_id, C19_Positive_Hospitalization.hospitalization, C19_Positive_Hospitalization.source, datediff(C19_Positive_Hospitalization.start_date,PPL.fake_dob)/365 as Age_At_C19_temp
+from C19_Positive_Hospitalization
+--If you just want a year without any other considerations get rid of date diff above and insert this as age_at_c19_temp: (year(C19_Positive_Hospitalization.start_date) - person.year_of_birth)
+left outer join (select person.person_id, 
+  concat(if(person.year_of_birth is not null, person.year_of_birth, '01'),
+   '-', if(person.month_of_birth is not null, person.month_of_birth, '01'), '-', if(person.day_of_birth is not null, person.day_of_birth, '01')
+   ) as fake_dob
+from person) PPL on C19_Positive_Hospitalization.person_id=PPL.person_id
+) as C19_Positive_Hospitalization

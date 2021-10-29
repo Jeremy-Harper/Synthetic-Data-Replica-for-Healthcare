@@ -1,0 +1,9 @@
+--Purpose - group conditions from the dataset and count number of people who have C19 and condition
+--Creator/Owner/contact - Jeremy Harper jeremytech@gmail.com
+--Last Update - 11/10/2020
+--Description - this is very simple count
+SELECT condition_occurrence.condition_type_concept_id, condition_occurrence.condition_source_value, count(condition_occurrence.person_id) as condition_count
+FROM condition_occurrence
+left outer join C19_positive_persons on condition_occurrence.person_id=C19_positive_persons.person_id
+where C19_positive_persons.person_id is not null
+group by condition_occurrence.condition_type_concept_id, condition_occurrence.condition_source_value

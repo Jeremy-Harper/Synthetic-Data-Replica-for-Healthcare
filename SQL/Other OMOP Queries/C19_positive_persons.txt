@@ -1,0 +1,7 @@
+--Purpose - Get a list of only C19 patients and what is the earliest source of C19 identification
+--Creator/Owner/contact - Jeremy Harper jeremytech@gmail.com
+--Last Update - 10/30/2020
+--Description - this provides a list with each person being unique
+select person_id, max(Age_At_C19) as Age_At_C19, max(age_group) as age_group, MIN(start_date) as C19_start_date, first(description) as description, first(C19_identification_visit_id) as C19_identification_visit_id, first(Hospitalization_visit_id) as Hospitalization_visit_id, first(source) as source
+from C19_Positive_All_data
+group by C19_Positive_All_data.person_id

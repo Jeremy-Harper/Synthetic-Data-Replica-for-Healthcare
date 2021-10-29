@@ -19,7 +19,8 @@ def pre_process(column: Series):
 
 
 def is_ssn(value):
-    """Test whether a number is between 0 and 1e9.
+    """
+    Test whether a number is between 0 and 1e9.
 
     Note this function does not take into consideration some special numbers that are never allocated.
     https://en.wikipedia.org/wiki/Social_Security_number
@@ -34,9 +35,7 @@ def is_ssn(value):
 
 
 class SocialSecurityNumberAttribute(AbstractAttribute):
-    """SocialSecurityNumber of format AAA-GG-SSSS.
-
-    """
+    """SocialSecurityNumber of format AAA-GG-SSSS."""
 
     def __init__(self, name: str, is_candidate_key, is_categorical, histogram_size: Union[int, str], data: Series):
         super().__init__(name, is_candidate_key, is_categorical, histogram_size, pre_process(data))
