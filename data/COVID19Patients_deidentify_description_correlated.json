@@ -1,6 +1,6 @@
 {
     "meta": {
-        "num_tuples": 997,
+        "num_tuples": 997, 
         "num_attributes": 7,
         "num_attributes_in_BN": 5,
         "all_attributes": [

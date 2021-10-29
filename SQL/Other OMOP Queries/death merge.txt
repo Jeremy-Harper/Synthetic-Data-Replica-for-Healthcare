@@ -1,5 +1,5 @@
 --Purpose - identify who has had covid19 and has died. this returns a distinct count.
---Creator/Owner/contact - Jeremy Harper jeremytech@gmail.com
+--Creator/Owner/contact - Jeremy Harper 
 --Last Update - 11/10/2020
 --Description - this is very simple
 SELECT *

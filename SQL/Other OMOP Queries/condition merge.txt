@@ -1,5 +1,5 @@
 --Purpose - group conditions from the dataset and count number of people who have C19 and condition
---Creator/Owner/contact - Jeremy Harper jeremytech@gmail.com
+--Creator/Owner/contact - Jeremy Harper 
 --Last Update - 11/10/2020
 --Description - this is very simple count
 SELECT condition_occurrence.condition_type_concept_id, condition_occurrence.condition_source_value, count(condition_occurrence.person_id) as condition_count

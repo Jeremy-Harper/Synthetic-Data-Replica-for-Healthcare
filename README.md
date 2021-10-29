@@ -1,7 +1,7 @@
 #  Synthetic-Data-Replica-for-Healthcare
 
 ## Description
-
+ 
 **What is this?**
 
 A tailored hands-on tutorial showing how to use Python to create synthetic data replica from healthcare datasets, in this case we are using a data schema called OMOP.

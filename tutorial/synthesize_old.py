@@ -2,7 +2,7 @@
 This generates synthetic data from the omop_data_deidentify.csv
 file (not you can change the file target in filepaths.py. It generates correlated synthetic data and saves them under ./data as COVID19Patients_description_correlated.json and COVID19Patients_data_synthetic_correlated.csv 
 '''
-
+ 
 import random 
 import os
 import time
