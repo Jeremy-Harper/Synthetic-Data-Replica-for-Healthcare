@@ -5,9 +5,9 @@ import numpy as np
 from dateutil.parser import parse
 from pandas import Series, concat
 
-from DataSynthesizer.datatypes.AbstractAttribute import AbstractAttribute
-from DataSynthesizer.datatypes.utils.DataType import DataType
-from DataSynthesizer.lib.utils import normalize_given_distribution
+from datatypes.AbstractAttribute import AbstractAttribute
+from datatypes.utils.DataType import DataType
+from lib.utils import normalize_given_distribution
 
 
 def is_datetime(value: str):
@@ -65,6 +65,7 @@ class DateTimeAttribute(AbstractAttribute):
 
     def encode_values_into_bin_idx(self):
         """Encode values into bin indices for Bayesian Network construction.
+
         """
         if self.is_categorical:
             value_to_bin_idx = {value: idx for idx, value in enumerate(self.distribution_bins)}
@@ -81,6 +82,5 @@ class DateTimeAttribute(AbstractAttribute):
 
     def sample_values_from_binning_indices(self, binning_indices):
         column = super().sample_values_from_binning_indices(binning_indices)
-        if not self.is_categorical:
-            column[~column.isnull()] = column[~column.isnull()].astype(int)
+        column[~column.isnull()] = column[~column.isnull()].astype(int)
         return column

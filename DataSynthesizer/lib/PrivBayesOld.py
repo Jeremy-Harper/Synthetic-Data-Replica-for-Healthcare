@@ -8,10 +8,11 @@ import numpy as np
 from pandas import DataFrame, merge
 from scipy.optimize import fsolve
 
-from DataSynthesizer.lib.utils import mutual_information, normalize_given_distribution, set_random_seed
+from lib.utils import mutual_information, normalize_given_distribution
 
 """
 This module is based on PrivBayes in the following paper:
+
 Zhang J, Cormode G, Procopiuc CM, Srivastava D, Xiao X.
 PrivBayes: Private Data Release via Bayesian Networks.
 """
@@ -19,10 +20,12 @@ PrivBayes: Private Data Release via Bayesian Networks.
 
 def calculate_sensitivity(num_tuples, child, parents, attr_to_is_binary):
     """Sensitivity function for Bayesian network construction. PrivBayes Lemma 1.
+
     Parameters
     ----------
     num_tuples : int
         Number of tuples in sensitive dataset.
+
     Return
     --------
     int
@@ -41,7 +44,9 @@ def calculate_sensitivity(num_tuples, child, parents, attr_to_is_binary):
 
 def calculate_delta(num_attributes, sensitivity, epsilon):
     """Computing delta, which is a factor when applying differential privacy.
+
     More info is in PrivBayes Section 4.2 "A First-Cut Solution".
+
     Parameters
     ----------
     num_attributes : int
@@ -56,6 +61,7 @@ def calculate_delta(num_attributes, sensitivity, epsilon):
 
 def usefulness_minus_target(k, num_attributes, num_tuples, target_usefulness=5, epsilon=0.1):
     """Usefulness function in PrivBayes.
+
     Parameters
     ----------
     k : int
@@ -113,8 +119,9 @@ def worker(paras):
     return parents_pair_list, mutual_info_list
 
 
-def greedy_bayes(dataset: DataFrame, k: int, epsilon: float, seed=0):
+def greedy_bayes(dataset: DataFrame, k: int, epsilon: float):
     """Construct a Bayesian Network (BN) using greedy algorithm.
+
     Parameters
     ----------
     dataset : DataFrame
@@ -123,10 +130,7 @@ def greedy_bayes(dataset: DataFrame, k: int, epsilon: float, seed=0):
         Maximum degree of the constructed BN. If k=0, k is automatically calculated.
     epsilon : float
         Parameter of differential privacy.
-    seed : int or float
-        Seed for the randomness in BN generation.
     """
-    set_random_seed(seed)
     dataset: DataFrame = dataset.astype(str, copy=False)
     num_tuples, num_attributes = dataset.shape
     if not k:
@@ -189,6 +193,7 @@ def exponential_mechanism(epsilon, mutual_info_list, parents_pair_list, attr_to_
 
 def laplace_noise_parameter(k, num_attributes, num_tuples, epsilon):
     """The noises injected into conditional distributions.
+
     Note that these noises are over counts, instead of the probability distributions in PrivBayes Algorithm 1.
     """
     return (num_attributes - k) / epsilon

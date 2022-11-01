@@ -4,19 +4,20 @@ from typing import Dict, List, Union
 from numpy import array_equal
 from pandas import DataFrame, read_csv
 
-from DataSynthesizer.datatypes.AbstractAttribute import AbstractAttribute
-from DataSynthesizer.datatypes.DateTimeAttribute import is_datetime, DateTimeAttribute
-from DataSynthesizer.datatypes.FloatAttribute import FloatAttribute
-from DataSynthesizer.datatypes.IntegerAttribute import IntegerAttribute
-from DataSynthesizer.datatypes.SocialSecurityNumberAttribute import is_ssn, SocialSecurityNumberAttribute
-from DataSynthesizer.datatypes.StringAttribute import StringAttribute
-from DataSynthesizer.datatypes.utils.DataType import DataType
-from DataSynthesizer.lib import utils
-from DataSynthesizer.lib.PrivBayes import greedy_bayes, construct_noisy_conditional_distributions
+from datatypes.AbstractAttribute import AbstractAttribute
+from datatypes.DateTimeAttribute import is_datetime, DateTimeAttribute
+from datatypes.FloatAttribute import FloatAttribute
+from datatypes.IntegerAttribute import IntegerAttribute
+from datatypes.SocialSecurityNumberAttribute import is_ssn, SocialSecurityNumberAttribute
+from datatypes.StringAttribute import StringAttribute
+from datatypes.utils.DataType import DataType
+from lib import utils
+from lib.PrivBayes import greedy_bayes, construct_noisy_conditional_distributions
 
 
 class DataDescriber:
     """Model input dataset, then save a description of the dataset into a JSON file.
+
     Attributes
     ----------
     histogram_bins : int or str
@@ -138,6 +139,7 @@ class DataDescriber:
                                                       numerical_attribute_ranges: Dict[str, List] = None,
                                                       seed=0):
         """Generate dataset description using correlated attribute mode.
+
         Parameters
         ----------
         dataset_file : str
@@ -172,7 +174,7 @@ class DataDescriber:
         if self.df_encoded.shape[1] < 2:
             raise Exception("Correlated Attribute Mode requires at least 2 attributes(i.e., columns) in dataset.")
 
-        self.bayesian_network = greedy_bayes(self.df_encoded, k, epsilon / 2, seed=seed)
+        self.bayesian_network = greedy_bayes(self.df_encoded, k, epsilon / 2)
         self.data_description['bayesian_network'] = self.bayesian_network
         self.data_description['conditional_probabilities'] = construct_noisy_conditional_distributions(
             self.bayesian_network, self.df_encoded, epsilon / 2)
@@ -253,6 +255,7 @@ class DataDescriber:
 
     def is_categorical(self, attribute_name):
         """ Detect whether an attribute is categorical.
+
         Parameters
         ----------
         attribute_name : str
