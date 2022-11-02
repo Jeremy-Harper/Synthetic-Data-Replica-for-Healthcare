@@ -324,6 +324,21 @@ attribute_is_categorical = {
 *Note, ideally we'll expand this with a list of expected names/types so that it doesn't need modification to match each flat file.
 
 
+
+### Time Series Data
+Time Series Data Here is a step by step created by Greta AI
+
+https://towardsdatascience.com/creating-synthetic-time-series-data-67223ff08e34
+
+Here are another few github repos which is actively generating synthetic data.
+https://github.com/sdv-dev/SDV
+
+https://github.com/ydataai/ydata-synthetic
+
+https://www.kdnuggets.com/2022/06/generate-synthetic-timeseries-data-opensource-tools.html
+
+
+
 ### Wrap-up
 
 This is the end of the tutorial.
@@ -347,11 +362,6 @@ We've created and inspected our synthetic datasets using three modules within it
 > 3. **ModelInspector**: creates plots comparing what was computed by DataDescriber, allowing you to evaluate the accuracy of the summarization process
 
 ---
-
-Time Series Data Here is a step by step created by Greta AI
-
-https://towardsdatascience.com/creating-synthetic-time-series-data-67223ff08e34
-
 
 ---
 
